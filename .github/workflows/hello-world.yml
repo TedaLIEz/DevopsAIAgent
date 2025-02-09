@@ -11,4 +11,3 @@ jobs:
 
       - name: Run Hello World
         run: echo "Hello, World!"
-`
