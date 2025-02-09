@@ -19,7 +19,7 @@ deployment_name = os.getenv('AZURE_OPENAI_DEPLOYMENT')
 class Tagging(BaseModel):
     """Tagging text with a label."""
     status: str = Field(description="The status of the tagging log. Select from 'success', 'failure', 'pending', 'timeout'.")
-    error_info: str = Field(description="The error information if the status is 'failure'.")
+    error_info: str = Field(description="The error information if the status is 'failure'. Please provide the error message in English.")
 
 class Agent:
     def __init__(self):
