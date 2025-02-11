@@ -1,19 +1,16 @@
-from langchain_openai import AzureChatOpenAI
 from langchain.prompts import ChatPromptTemplate 
+from langchain_deepseek import ChatDeepSeek
 import os
 from dotenv import load_dotenv
 from log_reader import read_log_file
-from typing import List  
 from pydantic import BaseModel, Field 
-from langchain_core.utils.function_calling import convert_pydantic_to_openai_function
-from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser  
+from langchain_core.output_parsers.openai_tools import PydanticToolsParser
 
 load_dotenv()
 
-endpoint = os.getenv('AZURE_OPENAI_ENDPOINT')
-api_key = os.getenv('AZURE_OPENAI_API_KEY')
-api_version = os.getenv('AZURE_OPENAI_VERSION')
-deployment_name = os.getenv('AZURE_OPENAI_DEPLOYMENT')
+endpoint = os.getenv('ENDPOINT')
+api_key = os.getenv('API_KEY')
+model = os.getenv('MODEL')
 
 
 class Tagging(BaseModel):
@@ -23,12 +20,10 @@ class Tagging(BaseModel):
 
 class Agent:
     def __init__(self):
-        self.__tagging = convert_pydantic_to_openai_function(Tagging)
-        self.__binding_functions = [self.__tagging]
-        self.__model = AzureChatOpenAI(temperature=0.0, api_key=api_key,  \
-                                       max_tokens=100,
-                                       deployment_name=deployment_name, api_version=api_version,  \
-                                    azure_endpoint=endpoint).bind(functions=self.__binding_functions, function_call={"name": "Tagging"})
+        self.__binding_functions = [Tagging]
+        self.__model = ChatDeepSeek(temperature=0.0, api_key=api_key,  \
+                              api_base=endpoint, \
+                              model=model).bind_tools(self.__binding_functions)
 
     def respond(self, message):
         from langchain_core.messages import HumanMessage, SystemMessage
@@ -45,6 +40,11 @@ class Agent:
             ("system", "You are a log analysis assistant. Please tag the log file."),
             ("user", "{input}")
         ])
-        tagging_chain = prompt | self.__model | JsonOutputFunctionsParser()
+        tagging_chain = prompt | self.__model | PydanticToolsParser(tools=self.__binding_functions)
         return tagging_chain.invoke({"input": content})
 
+
+if __name__ == "__main__":
+    agent = Agent()
+    file_path = os.path.join(os.getcwd(), "data", "logs", "0_hello-world-job.txt")
+    agent.check_log(file_path)
