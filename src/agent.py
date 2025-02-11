@@ -47,4 +47,4 @@ class Agent:
 if __name__ == "__main__":
     agent = Agent()
     file_path = os.path.join(os.getcwd(), "data", "logs", "0_hello-world-job.txt")
-    agent.check_log(file_path)
+    print(agent.respond("Hi"))
