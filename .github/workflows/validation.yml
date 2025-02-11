@@ -24,7 +24,7 @@ jobs:
           python -m compileall src
 
       - name: Run script
-        run: python src/agent.py
+        run: python src/agent.py log.txt
         env:
           API_KEY: ${{ secrets.LLM_API_KEY }}
           ENDPOINT: ${{ secrets.LLM_ENDPOINT }}
