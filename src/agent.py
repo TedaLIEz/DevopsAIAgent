@@ -1,3 +1,4 @@
+import argparse
 from langchain.prompts import ChatPromptTemplate 
 from langchain_deepseek import ChatDeepSeek
 import os
@@ -39,4 +40,12 @@ class Agent:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Log analysis tool")
+    parser.add_argument("log_file", type=str, help="Path to the log file")
+    args = parser.parse_args()
     agent = Agent()
+    try:
+        result = agent.check_log(args.log_file)
+        print(result)
+    except Exception as e:
+        print(f"Error: {e}")
