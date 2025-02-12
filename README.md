@@ -40,6 +40,12 @@ Install the required Python packages using pip:
 pip install -r requirements.txt
 ```
 
+Install smee via npm:
+
+```sh
+npm install --global smee-client
+```
+
 ### Environment Variables
 
 Create a `.env` file in the root directory of the project and add your environment variables. For example:
@@ -48,7 +54,7 @@ Create a `.env` file in the root directory of the project and add your environme
 ENDPOINT=https://api.siliconflow.cn/v1
 API_KEY=your_api_key
 MODEL=deepseek-ai/DeepSeek-V2.5
-TEST_WEBHOOK_BASE_URL=https://smee.io/your_webhook_url
+TEST_WEBHOOK_BASE_URL=https://smee.io/<channel ID>
 ```
 
 ### GitHub Actions
@@ -78,11 +84,11 @@ This will start the DevOps AI Agent using the specified configurations.
 
 ### Setting Up Webhook
 
-To set up a webhook for local development, use `pysmee`:
+To set up a webhook for local development, use `smee`:
 
 ```sh
-pip install pysmee
-pysmee --url $TEST_WEBHOOK_BASE_URL --path /path/to/local/webhook
+npm install --global smee-client
+smee -u https://smee.io/<Your Channel ID> --port 8000
 ```
 
 ### Running with FastAPI
