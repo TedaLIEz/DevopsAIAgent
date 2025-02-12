@@ -28,5 +28,4 @@ async def read_root(request: Request):
     body = await request.body()
     json = await request.json()
     print(f"Received request: {json}")
-    print(f"Received body: {body}")
     return body
