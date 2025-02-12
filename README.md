@@ -45,7 +45,10 @@ pip install -r requirements.txt
 Create a `.env` file in the root directory of the project and add your environment variables. For example:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key
+ENDPOINT=https://api.siliconflow.cn/v1
+API_KEY=your_api_key
+MODEL=deepseek-ai/DeepSeek-V2.5
+TEST_WEBHOOK_BASE_URL=https://smee.io/your_webhook_url
 ```
 
 ### GitHub Actions
@@ -68,7 +71,26 @@ env/
 To run the project, execute the following command:
 
 ```sh
-python src/agent.py
+python src/agent.py <path_to_log_file>
 ```
 
 This will start the DevOps AI Agent using the specified configurations.
+
+### Setting Up Webhook
+
+To set up a webhook for local development, use `pysmee`:
+
+```sh
+pip install pysmee
+pysmee --url $TEST_WEBHOOK_BASE_URL --path /path/to/local/webhook
+```
+
+### Running with FastAPI
+
+To run the project locally with `fastapi`, use the following command:
+
+```sh
+uvicorn src.main:app --reload
+```
+
+This will start the FastAPI server with live reload enabled.
