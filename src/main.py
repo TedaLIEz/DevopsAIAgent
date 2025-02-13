@@ -4,6 +4,8 @@ import zipfile
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from github import Github, GithubIntegration
+import logging
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 app_id = os.getenv('APP_ID')
@@ -46,6 +48,7 @@ async def read_root(request: Request):
             )
         repo = git_connection.get_repo(f"{owner}/{repo_name}")
         workflow_run = repo.get_workflow_run(workflow_run_id)   
+        logger.info(f"Workflow {workflow_run_id} completed!")
         headers = {
             'Authorization': f'Bearer {token}',
             'Accept': 'application/vnd.github.v3+json',
