@@ -3,6 +3,16 @@ name: Source code validation
 on: [push]
 
 jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Run script
+        run: |
+          echo "Hello, World!"
+
   validate-python-files:
     runs-on: ubuntu-latest
     steps:
