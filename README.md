@@ -9,6 +9,7 @@ Follow these steps to set up the build environment for the DevOps AI Agent proje
 - Python 3.8 or higher
 - pip (Python package installer)
 - Git
+- Node.js and npm (for smee-client)
 
 ### Clone the Repository
 
@@ -55,11 +56,14 @@ ENDPOINT=https://api.siliconflow.cn/v1
 API_KEY=your_api_key
 MODEL=deepseek-ai/DeepSeek-V2.5
 TEST_WEBHOOK_BASE_URL=https://smee.io/<channel ID>
+TEST_WEBHOOK_SECRET=your_webhook_secret
+APP_ID=your_app_id
+PRIVATE_KEY_PATH=/path/to/your/private-key.pem
 ```
 
 ### GitHub Actions
 
-This project includes a GitHub Actions workflow that runs a basic "Hello World" command on each push. The workflow file is located at `.github/workflows/hello-world.yml`.
+This project includes a GitHub Actions workflow. The workflow file is located at `.github/workflows/validation.yml`.
 
 ### Ignored Files
 
@@ -96,7 +100,7 @@ smee -u https://smee.io/<Your Channel ID> --port 8000
 To run the project locally with `fastapi`, use the following command:
 
 ```sh
-uvicorn src.main:app --reload
+uvicorn src.main:app --reload --log-config=log_conf.yaml
 ```
 
 This will start the FastAPI server with live reload enabled.
