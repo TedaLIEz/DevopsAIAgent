@@ -48,11 +48,10 @@ async def read_root(request: Request):
             logger.info(f"Workflow {payload['workflow_run']['id']} not completed, current status: {payload['action']}")
             return "Workflow to be run"
         conclusion = payload['workflow_run']['conclusion']
-        if conclusion != 'cancelled':
-            logger.info(f"Workflow {payload['workflow_run']['id']} is cancelled")
-            return "Workflow is cancelled"
         workflow_run_id = int(payload['workflow_run']['id'])
-        logger.info(f"Workflow {workflow_run_id} completed!")
+        logger.info(f"Workflow {workflow_run_id} status: {conclusion}")
+        if conclusion == 'cancelled':
+            return "Workflow is cancelled"
         owner = payload['repository']['owner']['login']
         repo_name = payload['repository']['name']
         token = git_integration.get_access_token(
