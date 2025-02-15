@@ -11,7 +11,7 @@ jobs:
       
       - name: Run script
         run: |
-          exit 1
+          echo "Hello, World!"
 
   validate-python-files:
     needs: hello-world
