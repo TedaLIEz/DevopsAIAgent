@@ -28,6 +28,9 @@ git_integration = GithubIntegration(
 
 @app.post("/")
 async def read_root(request: Request):
+    if not request.headers.get('X-GitHub-Event'):
+        logger.warning(f"No GitHub event received. Headers: {request.headers}")
+        return "No GitHub event received"
     event = request.headers['X-GitHub-Event']
     payload = await request.json()
     logger.info(f"Received event: {event}")
@@ -44,9 +47,14 @@ async def read_root(request: Request):
         if payload['action'] != 'completed':
             logger.info(f"Workflow {payload['workflow_run']['id']} not completed, current status: {payload['action']}")
             return "Workflow to be run"
+        conclusion = payload['workflow_run']['conclusion']
+        if conclusion != 'cancelled':
+            logger.info(f"Workflow {payload['workflow_run']['id']} is cancelled")
+            return "Workflow is cancelled"
+        workflow_run_id = int(payload['workflow_run']['id'])
+        logger.info(f"Workflow {workflow_run_id} completed!")
         owner = payload['repository']['owner']['login']
         repo_name = payload['repository']['name']
-        workflow_run_id = int(payload['workflow_run']['id'])
         token = git_integration.get_access_token(
                 git_integration.get_installation(owner, repo_name).id
                 ).token
@@ -54,8 +62,7 @@ async def read_root(request: Request):
             login_or_token=token
             )
         repo = git_connection.get_repo(f"{owner}/{repo_name}")
-        workflow_run = repo.get_workflow_run(workflow_run_id)   
-        logger.info(f"Workflow {workflow_run_id} completed!")
+        workflow_run = repo.get_workflow_run(workflow_run_id)
         headers = {
             'Authorization': f'Bearer {token}',
             'Accept': 'application/vnd.github.v3+json',
@@ -66,6 +73,7 @@ async def read_root(request: Request):
                                          str(workflow_run_id), 'log.zip')
             return download_log_file(response.content, zip_file_path)
         else:
+            logger.error(f"Failed to fetch logs, status code: {response.status_code}")
             return {"error": f"Failed to fetch logs, status code: {response.status_code}"}
     return "ok"
 
