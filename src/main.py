@@ -32,7 +32,14 @@ async def read_root(request: Request):
     event = json['event']
     if event == 'installation':
         payload = json['payload']
-        return "installation"
+        if json['action'] == 'created':
+            client_id = payload['client_id']
+            logger.info(f"Installation created with client_id: {client_id}")
+            return "Install success! You can now use the app"
+        elif json['action'] == 'deleted':
+            client_id = payload['client_id']
+            logger.info(f"Installation deleted with client_id: {client_id}")
+            return "Uninstall success!"
     if event == 'workflow_run':
         payload = json['payload']
         if payload['action'] != 'completed':
