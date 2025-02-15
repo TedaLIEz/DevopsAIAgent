@@ -44,12 +44,12 @@ async def read_root(request: Request):
             logger.info(f"Installation deleted with client_id: {client_id}")
             return "Uninstall success!"
     if event == 'workflow_run':
-        if payload['action'] != 'completed':
-            logger.info(f"Workflow {payload['workflow_run']['id']} not completed, current status: {payload['action']}")
-            return "Workflow to be run"
         conclusion = payload['workflow_run']['conclusion']
         workflow_run_id = int(payload['workflow_run']['id'])
-        logger.info(f"Workflow {workflow_run_id} status: {conclusion}")
+        action = payload['action']
+        logger.info(f"Workflow {workflow_run_id}, status: {action}, conclusion: {conclusion}")
+        if action != 'completed':
+            return "Workflow to be run"
         if conclusion == 'cancelled':
             return "Workflow is cancelled"
         owner = payload['repository']['owner']['login']
