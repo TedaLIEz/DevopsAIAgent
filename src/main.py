@@ -28,23 +28,22 @@ git_integration = GithubIntegration(
 
 @app.post("/")
 async def read_root(request: Request):
-    json = await request.json()
-    logger.info(f"Received event: {json}")
-    event = json['event']
+    event = request.headers['X-GitHub-Event']
+    payload = await request.json()
+    logger.info(f"Received event: {event}")
     if event == 'installation':
-        payload = json['payload']
-        if json['action'] == 'created':
+        if payload['action'] == 'created':
             client_id = payload['client_id']
             logger.info(f"Installation created with client_id: {client_id}")
             return "Install success! You can now use the app"
-        elif json['action'] == 'deleted':
+        elif payload['action'] == 'deleted':
             client_id = payload['client_id']
             logger.info(f"Installation deleted with client_id: {client_id}")
             return "Uninstall success!"
     if event == 'workflow_run':
-        payload = json['payload']
+        payload = payload['payload']
         if payload['action'] != 'completed':
-            logger.info(f"Workflow {payload['workflow_run']['id']} not completed")
+            logger.info(f"Workflow {payload['workflow_run']['id']} not completed, current status: {payload['action']}")
             return "Workflow to be run"
         owner = payload['repository']['owner']['login']
         repo_name = payload['repository']['name']
