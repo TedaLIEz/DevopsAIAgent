@@ -29,6 +29,7 @@ git_integration = GithubIntegration(
 @app.post("/")
 async def read_root(request: Request):
     json = await request.json()
+    logger.info(f"Received event: {json}")
     event = json['event']
     if event == 'installation':
         payload = json['payload']
@@ -43,6 +44,7 @@ async def read_root(request: Request):
     if event == 'workflow_run':
         payload = json['payload']
         if payload['action'] != 'completed':
+            logger.info(f"Workflow {payload['workflow_run']['id']} not completed")
             return "Workflow to be run"
         owner = payload['repository']['owner']['login']
         repo_name = payload['repository']['name']
