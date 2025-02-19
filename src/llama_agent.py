@@ -36,8 +36,9 @@ class Agent:
 
     def __init__(self):
         self.__llm = SiliconFlow(
-            api_key=api_key, model=model).as_structured_llm(Tagging)
+            api_key=api_key, model=model, temperature=0.0).as_structured_llm(Tagging)
         Settings.llm = self.__llm
+        # FIXME: AzureOpenAIEmbedding is working better than SiliconFlowEmbedding
         Settings.embed_model = SiliconFlowEmbedding(
             api_key=api_key, model=embedding_model)
 
@@ -45,14 +46,14 @@ class Agent:
         """Check logs in the specified folder."""
         documents = SimpleDirectoryReader(file_folder).load_data()
         index = VectorStoreIndex.from_documents(documents)
-        query_engine = index.as_query_engine(llm=self.__llm)
+        query_engine = index.as_query_engine()
         prompt_tmpl = (
             "Context information is below.\n"
             "---------------------\n"
             "{context_str}\n"
             "---------------------\n"
             "You are an assistant for log analysis. \
-                Use the following pieces of retrieved context to analyze the log. \
+                Use the above pieces of retrieved context to analyze the log. \
                 Use one sentence maximum and keep the answer concise."
             "Query: {query_str}\n"
             "Answer: "
