@@ -1,3 +1,7 @@
+"""
+This module provides an Agent class for log analysis using the LlamaIndex library.
+"""
+
 import argparse
 import os
 from pydantic import BaseModel, Field
@@ -17,12 +21,19 @@ embedding_model = os.getenv('EMBEDDING_MODEL')
 class Tagging(BaseModel):
     """Tagging text with a label."""
     status: str = Field(
-        description="The status of the tagging log. Select from 'success', 'error', 'pending', 'timeout', or 'unknown' if user input is not a log.")
+        description="The status of the tagging log. \
+            Select from 'success', 'error', 'pending', 'timeout', \
+            or 'unknown' if user input is not a log.")
     error_info: str = Field(
-        description="The error information if the status is 'error'. Please provide the error message in English.")
+        description="The error information if the status is 'error'. \
+            Please provide the error message in English.")
 
 
 class Agent:
+    """
+    Agent class for log analysis using the LlamaIndex library.
+    """
+
     def __init__(self):
         self.__llm = SiliconFlow(
             api_key=api_key, model=model).as_structured_llm(Tagging)
@@ -31,6 +42,7 @@ class Agent:
             api_key=api_key, model=embedding_model)
 
     def check_logs(self, file_folder):
+        """Check logs in the specified folder."""
         documents = SimpleDirectoryReader(file_folder).load_data()
         index = VectorStoreIndex.from_documents(documents)
         query_engine = index.as_query_engine(llm=self.__llm)
@@ -39,7 +51,9 @@ class Agent:
             "---------------------\n"
             "{context_str}\n"
             "---------------------\n"
-            "You are an assistant for log analysis. Use the following pieces of retrieved context to analyze the log. Use one sentence maximum and keep the answer concise."
+            "You are an assistant for log analysis. \
+                Use the following pieces of retrieved context to analyze the log. \
+                Use one sentence maximum and keep the answer concise."
             "Query: {query_str}\n"
             "Answer: "
         )
@@ -47,7 +61,8 @@ class Agent:
         query_engine.update_prompts(
             {"response_synthesizer:summary_template": new_summary_tmpl}
         )
-        question = "Extract any error information from the log. If there is no error, please provide the status of the log."
+        question = "Extract any error information from the log. \
+            If there is no error, please provide the status of the log."
         rst = query_engine.query(question)
         return rst
 
