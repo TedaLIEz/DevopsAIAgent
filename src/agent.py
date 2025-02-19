@@ -2,12 +2,12 @@ import argparse
 import os
 from pydantic import BaseModel, Field
 from langchain.prompts import ChatPromptTemplate
+from langchain_openai import AzureOpenAIEmbeddings
 from langchain_core.output_parsers.openai_tools import PydanticToolsParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_deepseek import ChatDeepSeek
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.document_loaders import TextLoader
-from langchain_community.embeddings import AzureOpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
@@ -71,11 +71,11 @@ class Agent:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Log analysis tool")
-    parser.add_argument("log_file", type=str, help="Path to the log file")
+    parser.add_argument("log_folder_path", type=str, help="Log folder path")
     args = parser.parse_args()
     agent = Agent()
     try:
-        response = agent.check_logs(args.log_file)
+        response = agent.check_logs(args.log_folder_path)
         print(response)
     except Exception as e:
         print(f"Error: {e}")
