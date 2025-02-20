@@ -1,10 +1,11 @@
 import os
-import requests
 import zipfile
+import logging
+import requests
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from github import Github, GithubIntegration
-import logging
+from src.llama_agent import Agent  # Fix the import statement
 logger = logging.getLogger(__name__)
 load_dotenv()
 
@@ -24,6 +25,9 @@ git_integration = GithubIntegration(
     app_id,
     app_key,
 )
+
+# Create an agent instance
+# agent = Agent()
 
 
 @app.post("/")
@@ -71,7 +75,12 @@ async def read_root(request: Request):
         if response.status_code == 200:
             zip_file_path = os.path.join(os.getcwd(), 'tmp', f'{owner}/{repo_name}',
                                          str(workflow_run_id), 'log.zip')
-            return download_log_file(response.content, zip_file_path)
+            rst = download_log_file(response.content, zip_file_path)
+            folder_path = rst['logs_path']
+            logger.debug(
+                f"Logs saved and extracted successfully at {folder_path}")
+            # response = agent.check_logs(folder_path)
+            # logger.info(f"Response: {response}")
         else:
             logger.error(
                 f"Failed to fetch logs, status code: {response.status_code}")
