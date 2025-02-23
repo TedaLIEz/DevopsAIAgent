@@ -41,6 +41,9 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     needs: validate-terraform-files
+    permissions:
+      contents: write
+      id-token: write    # Necessary for actions/deploy-pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
