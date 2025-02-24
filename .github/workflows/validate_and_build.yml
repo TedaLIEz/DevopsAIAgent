@@ -63,6 +63,10 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./.devops/azure
         run: terraform init
+      - name: Terraform Import
+        working-directory: ./.devops/azure
+        run: |
+          terraform import azurerm_resource_group.rg /subscriptions/${{ secrets.ARM_SUBSCRIPTION_ID }}/resourceGroups/devopsAgentRg
       - name: Terraform Plan
         working-directory: ./.devops/azure
         run: |
