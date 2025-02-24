@@ -63,6 +63,10 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./.devops/azure
         run: terraform init
+      - name: Terraform Plan
+        working-directory: ./.devops/azure
+        run: |
+          terraform plan
       - name: Deploy to Azure
         working-directory: ./.devops/azure
         run: |
