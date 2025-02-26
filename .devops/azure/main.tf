@@ -21,7 +21,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   name     = "devopsAgentRg"
-  location = "westus2"
+  location = "westus"
 }
 
 
