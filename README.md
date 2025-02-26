@@ -55,8 +55,8 @@ Create a `.env` file in the root directory of the project and add your environme
 ENDPOINT=https://api.siliconflow.cn/v1
 API_KEY=your_api_key
 MODEL=deepseek-ai/DeepSeek-V2.5
-TEST_WEBHOOK_BASE_URL=https://smee.io/<channel ID>
-TEST_WEBHOOK_SECRET=your_webhook_secret
+WEBHOOK_BASE_URL=https://smee.io/<channel ID>
+WEBHOOK_SECRET=your_webhook_secret
 APP_ID=your_app_id
 PRIVATE_KEY_PATH=/path/to/your/private-key.pem
 ```
