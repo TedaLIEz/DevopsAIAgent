@@ -88,15 +88,21 @@ jobs:
       - name: Set up env
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          LLM_ENDPOINT: ${{ secrets.LLM_ENDPOINT }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          EMBEDDING_MODEL: ${{ secrets.EMBEDDING_MODEL }}
+          APP_ID: ${{ secrets.APP_ID }}
         run: |
           mkdir -p data
           touch .env
-          echo "ENDPOINT=${{ secrets.LLM_ENDPOINT }}" > .env
-          echo "API_KEY=${{ secrets.LLM_API_KEY }}" > .env"
-          echo "LLM_MODEL=${{ secrets.LLM_MODEL }}" > .env
-          echo "EMBEDDING_MODEL=${{ secrets.EMBEDDING_MODEL }}" > .env
-          echo "APP_ID=${{ secrets.APP_ID }}" > .env
-          echo $PRIVATE_KEY > data/private_key.pem
+          echo "ENDPOINT=$LLM_ENDPOINT" > .env
+          echo "API_KEY=$LLM_API_KEY" >> .env
+          echo "LLM_MODEL=$LLM_MODEL" >> .env
+          echo "EMBEDDING_MODEL=$EMBEDDING_MODEL" >> .env
+          echo "APP_ID=$APP_ID" >> .env
+          echo "PRIVATE_KEY=/code/private-key.pem" >> .env
+          printf "%s" "$PRIVATE_KEY" > data/private_key.pem
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
