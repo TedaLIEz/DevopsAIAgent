@@ -102,7 +102,7 @@ jobs:
           echo "EMBEDDING_MODEL=$EMBEDDING_MODEL" >> .env
           echo "APP_ID=$APP_ID" >> .env
           echo "PRIVATE_KEY=/code/private-key.pem" >> .env
-          printf "%s" "$PRIVATE_KEY" > data/private_key.pem
+          printf "%s" "$PRIVATE_KEY" > ./data/private_key.pem
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
