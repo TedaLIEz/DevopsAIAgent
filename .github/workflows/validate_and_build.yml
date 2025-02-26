@@ -34,7 +34,7 @@ jobs:
           touch .env
           echo "ENDPOINT=${{ secrets.LLM_ENDPOINT }}" > .env
           echo "API_KEY=${{ secrets.LLM_API_KEY }}" > .env"
-          echo "LLM_MODEL"=${{ secrets.LLM_MODEL }}" > .env
+          echo "LLM_MODEL=${{ secrets.LLM_MODEL }}" > .env
           echo "EMBEDDING_MODEL=${{ secrets.EMBEDDING_MODEL }}" > .env
           echo "APP_ID=${{ secrets.APP_ID }}" > .env
           echo "PRIVATE_KEY=/code/data/private_key.pem" > .env
