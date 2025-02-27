@@ -7,7 +7,46 @@ on:
 
 jobs:
 
+  validate-and-deployment:
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_USE_OIDC: true
+      ARM_ACCOUNT_KEY: ${{ secrets.ARM_ACCOUNT_KEY }}
+    permissions:
+      contents: write
+      id-token: write    # Necessary for actions/deploy-pages
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v3
+      - name: Azure CLI Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      - name: Initialize Terraform
+        working-directory: ./.devops/azure
+        run: terraform init
+      - name: Terraform Validate
+        working-directory: ./.devops/azure
+        run: |
+          terraform validate
+      - name: Terraform Plan
+        working-directory: ./.devops/azure
+        run: |
+          terraform plan
+      - name: Deploy to Azure
+        working-directory: ./.devops/azure
+        run: |
+          terraform apply -auto-approve
+
   validate-python-files:
+    needs: validate-and-deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -67,44 +106,5 @@ jobs:
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
-
-  validate-and-deployment:
-    runs-on: ubuntu-latest
-    needs: build-and-publish
-    env:
-      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      ARM_USE_OIDC: true
-      ARM_ACCOUNT_KEY: ${{ secrets.ARM_ACCOUNT_KEY }}
-    permissions:
-      contents: write
-      id-token: write    # Necessary for actions/deploy-pages
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v3
-      - name: Azure CLI Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.ARM_CLIENT_ID }}
-          tenant-id: ${{ secrets.ARM_TENANT_ID }}
-          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      - name: Initialize Terraform
-        working-directory: ./.devops/azure
-        run: terraform init
-      - name: Terraform Validate
-        working-directory: ./.devops/azure
-        run: |
-          terraform validate
-      - name: Terraform Plan
-        working-directory: ./.devops/azure
-        run: |
-          terraform plan
-      - name: Deploy to Azure
-        working-directory: ./.devops/azure
-        run: |
-          terraform apply -auto-approve
 
   
