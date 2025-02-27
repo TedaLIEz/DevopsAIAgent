@@ -55,6 +55,7 @@ resource "azurerm_linux_web_app" "app" {
   https_only          = true
 
   site_config {
+    always_on                                     = false
     container_registry_use_managed_identity       = "true"
     container_registry_managed_identity_client_id = azurerm_user_assigned_identity.identity.client_id
 
