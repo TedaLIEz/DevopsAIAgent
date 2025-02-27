@@ -46,19 +46,13 @@ resource "azurerm_user_assigned_identity" "identity" {
   location            = azurerm_resource_group.rg.location
 }
 
-resource "azurerm_role_assignment" "pull_image" {
-  role_definition_name = "AcrPull"
-  scope                = azurerm_container_registry.acr.id
-  principal_id         = azurerm_user_assigned_identity.identity.client_id
-}
-
 
 resource "azurerm_linux_web_app" "app" {
   name                = "devopsagent"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   service_plan_id     = azurerm_service_plan.asp.id
-  https_only          = true
+  https_only          = false
 
   site_config {
     always_on                                     = "true"
