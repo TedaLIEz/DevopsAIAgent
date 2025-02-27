@@ -54,7 +54,7 @@ resource "azurerm_linux_web_app" "app" {
 
     application_stack {
       docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
-      docker_image_name        = "devops_agent:latest"
+      docker_image_name        = "devops_ai_agent:latest"
       docker_registry_password = azurerm_container_registry.acr.admin_password
       docker_registry_username = azurerm_container_registry.acr.admin_username
     }
