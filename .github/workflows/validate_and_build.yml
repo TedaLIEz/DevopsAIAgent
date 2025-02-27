@@ -104,7 +104,7 @@ jobs:
           echo "PRIVATE_KEY=/code/private-key.pem" >> .env
           printf "%s" "$PRIVATE_KEY" > ./data/private-key.pem
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:${{ github.sha }}
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:latest
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:latest
 
   
