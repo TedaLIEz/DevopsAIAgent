@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0.2"
+      version = "3.112.0"
     }
   }
   backend "azurerm" {
@@ -38,4 +38,36 @@ resource "azurerm_service_plan" "asp" {
   location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
   sku_name            = "F1"
+}
+
+resource "azurerm_user_assigned_identity" "identity" {
+  name                = "mi_devopsAgent"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
+
+resource "azurerm_role_assignment" "pull_image" {
+  role_definition_name = "AcrPull"
+  scope                = azurerm_container_registry.acr.id
+  principal_id         = azurerm_user_assigned_identity.identity.client_id
+}
+
+
+resource "azurerm_linux_web_app" "app" {
+  name                = "devopsagent"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  service_plan_id     = azurerm_service_plan.asp.id
+  https_only          = true
+
+  site_config {
+    always_on                                     = "true"
+    container_registry_use_managed_identity       = "true"
+    container_registry_managed_identity_client_id = azurerm_user_assigned_identity.identity.client_id
+
+    application_stack {
+      docker_registry_url = "https://${azurerm_container_registry.acr.login_server}"
+      docker_image_name   = "devops_agent"
+    }
+  }
 }
