@@ -101,7 +101,7 @@ jobs:
           echo "LLM_MODEL=$LLM_MODEL" >> .env
           echo "EMBEDDING_MODEL=$EMBEDDING_MODEL" >> .env
           echo "APP_ID=$APP_ID" >> .env
-          echo "PRIVATE_KEY=/code/private-key.pem" >> .env
+          echo "PRIVATE_KEY_PATH=/code/private-key.pem" >> .env
           printf "%s" "$PRIVATE_KEY" > ./data/private-key.pem
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devops_ai_agent:latest
