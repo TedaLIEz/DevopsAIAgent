@@ -1,5 +1,9 @@
 # DevOps AI Agent
 
+## Introduction
+
+The DevOps AI Agent is a tool designed to assist with log analysis using advanced language models. It integrates with GitHub to fetch workflow logs, analyze them, and provide concise summaries or error information. The project leverages the LlamaIndex library for embedding and querying log data.
+
 ## Build Environment Setup
 
 Follow these steps to set up the build environment for the DevOps AI Agent project.
@@ -54,9 +58,12 @@ Create a `.env` file in the root directory of the project and add your environme
 ```env
 ENDPOINT=https://api.siliconflow.cn/v1
 API_KEY=your_api_key
-MODEL=deepseek-ai/DeepSeek-V2.5
+LLM_MODEL=deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+EMBEDDING_MODEL=Pro/BAAI/bge-m3
+WEBHOOK_BASE_URL=https://smee.io/<channel ID>
 APP_ID=your_app_id
 PRIVATE_KEY_PATH=/path/to/your/private-key.pem
+WEBHOOK_SECRET=your_webhook_secret
 ```
 
 ### GitHub Actions
