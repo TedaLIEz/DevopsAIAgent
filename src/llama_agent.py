@@ -42,7 +42,7 @@ class Agent:
         Settings.embed_model = SiliconFlowEmbedding(
             api_key=api_key, model=embedding_model)
 
-    def check_logs(self, file_folder):
+    def check_logs(self, file_folder) -> Tagging:
         """Check logs in the specified folder."""
         documents = SimpleDirectoryReader(file_folder).load_data()
         index = VectorStoreIndex.from_documents(documents)
