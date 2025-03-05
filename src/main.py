@@ -49,42 +49,46 @@ async def read_root(request: Request):
             return "Uninstall success!"
     if event == 'workflow_run':
         conclusion = payload['workflow_run']['conclusion']
+        workflow_event = payload['workflow_run']['event']
         workflow_run_id = int(payload['workflow_run']['id'])
         action = payload['action']
         logger.info(
-            f"Workflow {workflow_run_id}, status: {action}, conclusion: {conclusion}")
-        if action != 'completed':
-            return "Workflow to be run"
-        if conclusion == 'cancelled':
-            return "Workflow is cancelled"
-        owner = payload['repository']['owner']['login']
-        repo_name = payload['repository']['name']
-        token = git_integration.get_access_token(
-            git_integration.get_installation(owner, repo_name).id
-        ).token
-        git_connection = Github(
-            login_or_token=token
-        )
-        repo = git_connection.get_repo(f"{owner}/{repo_name}")
-        workflow_run = repo.get_workflow_run(workflow_run_id)
-        headers = {
-            'Authorization': f'Bearer {token}',
-            'Accept': 'application/vnd.github.v3+json',
-        }
-        response = requests.get(workflow_run.logs_url, headers=headers)
-        if response.status_code == 200:
-            zip_file_path = os.path.join(os.getcwd(), 'tmp', f'{owner}/{repo_name}',
-                                         str(workflow_run_id), 'log.zip')
-            rst = download_log_file(response.content, zip_file_path)
-            folder_path = rst['logs_path']
-            logger.debug(
-                f"Logs saved and extracted successfully at {folder_path}")
-            # response = agent.check_logs(folder_path)
-            # logger.info(f"Response: {response}")
-        else:
-            logger.error(
-                f"Failed to fetch logs, status code: {response.status_code}")
-            return {"error": f"Failed to fetch logs, status code: {response.status_code}"}
+            f"Workflow {workflow_run_id}, event: {workflow_event}, status: {action}, conclusion: {conclusion}")
+        if workflow_event == 'pull_request':
+            pull_request_id = payload['workflow_run']['pull_requests'][0]['number']
+            logger.debug(f"Pull request: {pull_request_id}")
+            if action != 'completed':
+                return "Workflow to be run"
+            if conclusion == 'cancelled':
+                return "Workflow is cancelled"
+            owner = payload['repository']['owner']['login']
+            repo_name = payload['repository']['name']
+            token = git_integration.get_access_token(
+                git_integration.get_installation(owner, repo_name).id
+            ).token
+            git_connection = Github(
+                login_or_token=token
+            )
+            repo = git_connection.get_repo(f"{owner}/{repo_name}")
+            workflow_run = repo.get_workflow_run(workflow_run_id)
+            headers = {
+                'Authorization': f'Bearer {token}',
+                'Accept': 'application/vnd.github.v3+json',
+            }
+            response = requests.get(workflow_run.logs_url, headers=headers)
+            if response.status_code == 200:
+                zip_file_path = os.path.join(os.getcwd(), 'tmp', f'{owner}/{repo_name}',
+                                             str(workflow_run_id), 'log.zip')
+                rst = download_log_file(response.content, zip_file_path)
+                folder_path = rst['logs_path']
+                logger.debug(
+                    f"Logs saved and extracted successfully at {folder_path}")
+                # response = agent.check_logs(folder_path)
+                # logger.info(f"Response: {response}")
+            else:
+                logger.error(
+                    f"Failed to fetch logs, status code: {response.status_code}")
+                return {"error": f"Failed to fetch logs, status code: {response.status_code}"}
     return "ok"
 
 
