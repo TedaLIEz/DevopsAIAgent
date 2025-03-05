@@ -111,7 +111,7 @@ async def read_root(request: Request, response: Response):
                     response_status = response.status
                     error_info = response.error_info
                     pr.create_issue_comment(
-                        f"## DevOps AI Agent\n\n"
+                        f"## Deep Logix\n\n"
                         f"Logs are checked and here is the status: {response_status}\n\n"
                         f"Error info: {error_info}"
                     )
