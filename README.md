@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The DevOps AI Agent is a tool designed to assist with log analysis using advanced language models. It integrates with GitHub to fetch workflow logs, analyze them, and provide concise summaries or error information. The project leverages the LlamaIndex library for embedding and querying log data.
+The DevOps AI Agent is a tool designed to assist with log analysis using advanced language models. It integrates with GitHub to fetch workflow logs, analyze them, and provide concise summaries or error information. The project leverages the LlamaIndex library for embedding and querying log data. And it has been integrated like a Github app.
 
 ## Problem Statement
 
