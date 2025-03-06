@@ -108,6 +108,7 @@ async def read_root(request: Request, response: Response):
                     logger.debug("Logs saved and extracted successfully at %s",
                                  folder_path)
                     response = agent.check_logs(folder_path)
+                    os.system(f"rm -rf {folder_path}")
                     response_status = response.status
                     error_info = response.error_info
                     pr.create_issue_comment(
