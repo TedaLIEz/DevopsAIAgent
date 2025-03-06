@@ -62,7 +62,7 @@ class Agent:
         query_engine.update_prompts(
             {"response_synthesizer:summary_template": new_summary_tmpl}
         )
-        question = "Extract any error information from the log. \
+        question = "Extract the root cause of possible failures from the log, including the error message. \
             If there is no error, please provide the status of the log."
         rst = query_engine.query(question)
         return rst
