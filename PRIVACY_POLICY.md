@@ -33,6 +33,6 @@ We may update this privacy policy from time to time. Any changes will be posted 
 
 ## Contact Us
 
-If you have any questions or concerns about this privacy policy, please contact us at [your contact email].
+If you have any questions or concerns about this privacy policy, please contact us at aliezted@gmail.com.
 
 By using the DevOps AI Agent, you agree to the terms outlined in this privacy policy.
