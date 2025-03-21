@@ -37,10 +37,6 @@ jobs:
         working-directory: ./.devops/azure
         run: |
           terraform validate
-      - name: Terraform Plan
-        working-directory: ./.devops/azure
-        run: |
-          terraform plan
 
   validate-python-files:
     needs: validate-and-deployment
