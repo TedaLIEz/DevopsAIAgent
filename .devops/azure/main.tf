@@ -71,4 +71,33 @@ resource "azurerm_linux_web_app" "app" {
   app_settings = {
     DOCKER_ENABLE_CI = "true"
   }
+
+
+}
+
+
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = "devops-agent-aks"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "devops-agent-aks"
+
+  default_node_pool {
+    name                = "default"
+    node_count          = 1
+    vm_size             = "Standard_B2s" # Most cost-effective VM size for dev/test
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  network_profile {
+    network_plugin = "kubenet"
+    network_policy = "calico"
+  }
+
+  sku_tier = "Free"
+
+  monitor_metrics {}
 }
