@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - ".devops/**"
+      - ".github/**"
 
 jobs:
   infra-deploy:
