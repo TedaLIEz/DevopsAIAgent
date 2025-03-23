@@ -45,4 +45,25 @@ jobs:
       - name: Deploy to Azure
         working-directory: ./.devops/azure
         run: |
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var="resource_group_name=${{ secrets.RESOURCE_GROUP_NAME }}" -var="aks_cluster_name=${{ secrets.AKS_CLUSTER_NAME }}"
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: "${{ secrets.RESOURCE_GROUP_NAME }}"
+          cluster-name: "${{ secrets.AKS_CLUSTER_NAME }}"
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Replace variables in Kubernetes deployment
+        run: |
+          export REGISTRY_LOGIN_SERVER=${{ secrets.REGISTRY_LOGIN_SERVER }}
+          envsubst < .devops/kubernetes/deployment.yaml > .devops/kubernetes/deployment_replaced.yaml
+      - name: Deploy to Kubernetes
+        working-directory: ./.devops/kubernetes
+        run: |
+          kubectl delete secret acr-secret --ignore-not-found
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=${{ secrets.REGISTRY_LOGIN_SERVER }} \
+            --docker-username=${{ secrets.REGISTRY_USERNAME }} \
+            --docker-password=${{ secrets.REGISTRY_PASSWORD }}
+          kubectl apply -f deployment_replaced.yaml
