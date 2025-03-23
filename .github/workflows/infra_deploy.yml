@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - ".devops/**"
-      - ".github/**"
+      - ".github/workflows/infra_deploy.yml"
 
 jobs:
   infra-deploy:

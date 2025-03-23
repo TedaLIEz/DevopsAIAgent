@@ -6,6 +6,10 @@ on:
       - main
     paths-ignore:
       - ".devops/**"
+      - ".github/CODEOWNERS"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+      - ".github/workflows/validation.yml"
+      - ".github/workflows/infra_deploy.yml"
 
 jobs:
   validate-and-deployment:
