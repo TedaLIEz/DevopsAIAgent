@@ -20,38 +20,38 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "devopsAgentRg"
-  location = "westus"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 
 resource "azurerm_container_registry" "acr" {
-  name                = "devopsAgentRegistry"
+  name                = var.acr_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku                 = "Basic"
+  sku                 = var.acr_sku
   admin_enabled       = true
 }
 
 resource "azurerm_service_plan" "asp" {
-  name                = "devopsAgentServicePlan"
+  name                = var.app_service_plan_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
-  sku_name            = "F1"
+  sku_name            = var.app_service_sku
 }
 
 resource "azurerm_log_analytics_workspace" "law" {
-  name                = "devopsAgentLaw"
+  name                = var.log_analytics_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
+  sku                 = var.log_analytics_sku
+  retention_in_days   = var.log_retention_days
 }
 
 
 resource "azurerm_linux_web_app" "app" {
-  name                = "build-log-inspector"
+  name                = var.web_app_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   service_plan_id     = azurerm_service_plan.asp.id
@@ -77,15 +77,15 @@ resource "azurerm_linux_web_app" "app" {
 
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "devops-agent-aks"
+  name                = var.aks_cluster_name
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "devops-agent-aks"
+  dns_prefix          = var.aks_cluster_name
 
   default_node_pool {
-    name                = "default"
-    node_count          = 1
-    vm_size             = "Standard_B2s" # Most cost-effective VM size for dev/test
+    name       = "default"
+    node_count = var.aks_node_count
+    vm_size    = var.aks_vm_size
   }
 
   identity {
@@ -93,7 +93,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin = "kubenet"
+    network_plugin = "azure"
     network_policy = "calico"
   }
 

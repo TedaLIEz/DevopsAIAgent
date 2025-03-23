@@ -1,0 +1,43 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-ai-agent
+spec:
+  selector: # Define the wrapping strategy
+    matchLabels: # Match all pods with the defined labels
+      app: devops-ai-agent # Labels follow the `name: value` template
+  template: # This is the template of the pod inside the deployment
+    metadata:
+      labels:
+        app: devops-ai-agent
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: ${REGISTRY_LOGIN_SERVER}/devops_ai_agent:latest
+          name: devops-ai-agent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+      imagePullSecrets:
+        - name: acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-ai-agent
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: devops-ai-agent
+  type: LoadBalancer
