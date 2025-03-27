@@ -195,13 +195,13 @@ resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
   destinations {
     log_analytics {
       workspace_resource_id = azurerm_log_analytics_workspace.law.id
-      name                  = azurerm_log_analytics_workspace.law.name
+      name                  = "ciworkspace"
     }
   }
 
   data_flow {
     streams      = var.streams
-    destinations = [azurerm_log_analytics_workspace.law.name]
+    destinations = ["ciworkspace"]
   }
 
   data_sources {
@@ -216,7 +216,7 @@ resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
           "enableContainerLogV2" : var.enableContainerLogV2
         }
       })
-      name = "devops-ai-agent-containerInsightsExtension"
+      name = "ContainerInsightsExtension"
     }
   }
 
