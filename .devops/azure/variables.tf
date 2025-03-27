@@ -81,3 +81,23 @@ variable "web_app_name" {
   description = "Name of the web app"
   default     = "build-log-inspector"
 }
+
+variable "metric_labels_allowlist" {
+  default = null
+}
+
+variable "metric_annotations_allowlist" {
+  default = null
+}
+
+variable "monitor_workspace_name" {
+  default = "devops-agent-amw"
+}
+
+variable "grafana_name" {
+  default = "devops-agent-grafana"
+}
+
+variable "grafana_version" {
+  default = "10"
+}
