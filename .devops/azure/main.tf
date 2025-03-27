@@ -216,7 +216,7 @@ resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
           "enableContainerLogV2" : var.enableContainerLogV2
         }
       })
-      name = "ContainerInsightsExtension"
+      name = "devops-ai-agent-containerInsightsExtension"
     }
   }
 
@@ -224,7 +224,7 @@ resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
 }
 
 resource "azurerm_monitor_data_collection_rule_association" "ci_dcra" {
-  name                    = "ContainerInsightsExtension"
+  name                    = "devops-ai-agent-containerInsightsExtension"
   target_resource_id      = azurerm_kubernetes_cluster.aks.id
   data_collection_rule_id = azurerm_monitor_data_collection_rule.msci_dcr.id
   description             = "Association of container insights data collection rule. Deleting this association will break the data collection for this AKS Cluster."
