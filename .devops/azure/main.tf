@@ -188,7 +188,7 @@ resource "azurerm_role_assignment" "datareaderrole" {
 
 
 resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
-  name                = "MSCI-${var.location}-${var.aks_cluster_name}"
+  name                = "MSCI-devops-ai-agent-${var.location}-${var.aks_cluster_name}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
