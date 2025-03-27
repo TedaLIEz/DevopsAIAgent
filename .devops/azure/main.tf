@@ -195,13 +195,13 @@ resource "azurerm_monitor_data_collection_rule" "msci_dcr" {
   destinations {
     log_analytics {
       workspace_resource_id = azurerm_log_analytics_workspace.law.id
-      name                  = "ciworkspace"
+      name                  = azurerm_log_analytics_workspace.law.name
     }
   }
 
   data_flow {
     streams      = var.streams
-    destinations = ["ciworkspace"]
+    destinations = [azurerm_log_analytics_workspace.law.name]
   }
 
   data_sources {
