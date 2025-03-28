@@ -33,13 +33,7 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = true
 }
 
-resource "azurerm_service_plan" "asp" {
-  name                = var.app_service_plan_name
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  os_type             = "Linux"
-  sku_name            = var.app_service_sku
-}
+
 
 resource "azurerm_log_analytics_workspace" "law" {
   name                = var.log_analytics_name
@@ -50,30 +44,6 @@ resource "azurerm_log_analytics_workspace" "law" {
 }
 
 
-resource "azurerm_linux_web_app" "app" {
-  name                = var.web_app_name
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  service_plan_id     = azurerm_service_plan.asp.id
-  https_only          = true
-
-  site_config {
-    always_on = false
-
-    application_stack {
-      docker_registry_url      = "https://${azurerm_container_registry.acr.login_server}"
-      docker_image_name        = "devops_ai_agent:latest"
-      docker_registry_password = azurerm_container_registry.acr.admin_password
-      docker_registry_username = azurerm_container_registry.acr.admin_username
-    }
-  }
-
-  app_settings = {
-    DOCKER_ENABLE_CI = "true"
-  }
-
-
-}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
