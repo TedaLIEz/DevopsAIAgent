@@ -14,7 +14,7 @@ variable "acr_sku" {
 variable "acr_image_name" {
   type        = string
   description = "Name of the image in the container registry"
-  default     = "devops_ai_agent"
+  default     = "devops_ai_agent:latest"
 }
 
 # App Service Plan
