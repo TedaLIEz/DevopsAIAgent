@@ -1,3 +1,16 @@
+# Container Registry
+variable "acr_name" {
+  type        = string
+  description = "Name of Azure Container Registry"
+  default     = "devopsAgentRegistry"
+}
+
+variable "acr_sku" {
+  type        = string
+  description = "SKU for Azure Container Registry"
+  default     = "Basic"
+}
+
 # App Service Plan
 variable "app_service_plan_name" {
   type        = string
