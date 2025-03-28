@@ -24,18 +24,7 @@ variable "acr_sku" {
   default     = "Basic"
 }
 
-# App Service Plan
-variable "app_service_plan_name" {
-  type        = string
-  description = "Name of App Service Plan"
-  default     = "devopsAgentServicePlan"
-}
 
-variable "app_service_sku" {
-  type        = string
-  description = "SKU for App Service Plan"
-  default     = "F1"
-}
 
 # Log Analytics
 variable "log_analytics_name" {
@@ -75,12 +64,7 @@ variable "aks_vm_size" {
   default     = "Standard_B2s"
 }
 
-# Web App
-variable "web_app_name" {
-  type        = string
-  description = "Name of the web app"
-  default     = "build-log-inspector"
-}
+
 
 variable "metric_labels_allowlist" {
   default = null
