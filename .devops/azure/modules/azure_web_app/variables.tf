@@ -11,6 +11,12 @@ variable "acr_sku" {
   default     = "Basic"
 }
 
+variable "acr_image_name" {
+  type        = string
+  description = "Name of the image in the container registry"
+  default     = "devops_ai_agent"
+}
+
 # App Service Plan
 variable "app_service_plan_name" {
   type        = string
