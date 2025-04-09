@@ -24,31 +24,7 @@ variable "acr_sku" {
   default     = "Basic"
 }
 
-variable "acr_image_name" {
-  type        = string
-  description = "Name of the image in the container registry"
-  default     = "devops_ai_agent:latest"
-}
 
-# App Service Plan Variables
-variable "app_service_plan_name" {
-  type        = string
-  description = "Name of App Service Plan"
-  default     = "devopsAgentServicePlan"
-}
-
-variable "app_service_sku" {
-  type        = string
-  description = "SKU for App Service Plan"
-  default     = "F1"
-}
-
-# Web App Variables
-variable "web_app_name" {
-  type        = string
-  description = "Name of the web app"
-  default     = "build-log-inspector"
-}
 
 # Log Analytics
 variable "log_analytics_name" {
@@ -88,6 +64,8 @@ variable "aks_vm_size" {
   default     = "Standard_B2s"
 }
 
+
+
 variable "metric_labels_allowlist" {
   default = null
 }
@@ -111,6 +89,7 @@ variable "grafana_version" {
 variable "streams" {
   default = ["Microsoft-ContainerLog", "Microsoft-ContainerLogV2", "Microsoft-KubeEvents", "Microsoft-KubePodInventory", "Microsoft-KubeNodeInventory", "Microsoft-KubePVInventory", "Microsoft-KubeServices", "Microsoft-KubeMonAgentEvents", "Microsoft-InsightsMetrics", "Microsoft-ContainerInventory", "Microsoft-ContainerNodeInventory", "Microsoft-Perf"]
 }
+
 
 variable "data_collection_interval" {
   default = "1m"
