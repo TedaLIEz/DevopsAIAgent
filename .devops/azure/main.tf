@@ -37,24 +37,24 @@ resource "azurerm_log_analytics_workspace" "law" {
 
 resource "azurerm_container_registry" "acr" {
   name                = var.acr_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   sku                 = var.acr_sku
   admin_enabled       = true
 }
 
 resource "azurerm_service_plan" "asp" {
   name                = var.app_service_plan_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
   sku_name            = var.app_service_sku
 }
 
 resource "azurerm_linux_web_app" "app" {
   name                = var.web_app_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   service_plan_id     = azurerm_service_plan.asp.id
   https_only          = true
 
